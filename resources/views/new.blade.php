@@ -1,1 +1,6 @@
-My View
+@extends('layout')
+@section('content')
+
+test
+
+@endsection
