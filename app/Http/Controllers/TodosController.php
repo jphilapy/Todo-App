@@ -8,38 +8,50 @@ use Session;
 
 class TodosController extends Controller
 {
-    public function index() {
+    public function index()
+    {
         $todos = Todo::all();
         return view('todos')->with('todos', $todos);
     }
 
 
-    public function store(Request $request) {
-        $todo = new Todo;
+    public function store(Request $request)
+    {
 
-        $todo->todo = $request->todo;
+        $countTodos = Todo::all()->count();
+        if ($countTodos < 10) {
+            $todo = new Todo;
 
-        $todo->save();
+            $todo->todo = $request->todo;
 
-        Session::flash('success', 'Your todo was created.');
+            $todo->save();
+            Session::flash('success', 'Your todo was created. ');
+        } else {
+            Session::flash('success', 'You cannot create anymore tasks. Delete some first. ');
+        }
+
+
         return redirect()->back();
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
         $todo = Todo::find($id);
         $todo->delete();
         Session::flash('success', 'Your todo was deleted.');
         return redirect()->back();
     }
 
-    public function update($id) {
+    public function update($id)
+    {
         $todo = Todo::find($id);
 
         return view('update')->with('todo', $todo);
     }
 
 
-    public function save(Request $request, $id) {
+    public function save(Request $request, $id)
+    {
         $todo = Todo::find($id);
         $todo->todo = $request->todo;
         $todo->save();
@@ -50,7 +62,8 @@ class TodosController extends Controller
         return redirect(route('todo'));
     }
 
-    public function complete($id) {
+    public function complete($id)
+    {
 
         $todo = Todo::find($id);
         $todo->completed = 1;
